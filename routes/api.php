@@ -49,7 +49,7 @@ Route::post('login', 'UserController@SignIn');
 Route::get('test', 'UserController@test');
 
 // Event Routes
-Route::post('storeevent', 'EventController@store');
+Route::post('savemeet', 'EventController@store');
 Route::post('eventsignup', 'EventController@signUp');
 
 // Invalid request route
