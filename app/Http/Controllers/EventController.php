@@ -59,18 +59,8 @@ class EventController extends Controller {
 
         // ENSURE VALID DATE INPUT
         if (strlen($date) != $VALID_DATE_LENGTH) {
-            return Response::json(['error' => 'Date Expected in form mmddyyyy']);
+            return Response::json(['error' => 'Date Expected in form mm/dd/yyyy']);
         }
-
-        /**
-         *
-         * CONVERT DATE FORMAT TO IS0-8601
-         *
-         */
-
-        // Convert mmddyyyy to mm/dd/yyyy 
-//        $addSlash = substr_replace($date, '/', 2, 0);		
-  //      $dateWithSlash = substr_replace($addSlash, '/', 5, 0);		
 
         // separate string 'mm/dd/yyyy' into array by the '/' delimiter
         $date_array = explode( '/', $date);
@@ -79,10 +69,12 @@ class EventController extends Controller {
         $day = $date_array[1];
         $year = $date_array[2];
 
-        $mysqlDateFormat = $year.$month.$day;
-
+        // ENSURE DATE EXISTS
         if (!checkdate($month, $day, $year))
             return Response::json(['error' => 'Invalid Date']);
+
+        // CONVERT DATE FORMAT TO IS0-8601
+        $mysqlDateFormat = $year.$month.$day;
 
         // SEND FORM INPUT TO DATABASE
         $event = new Event;
