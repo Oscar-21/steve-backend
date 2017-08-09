@@ -88,8 +88,6 @@ class UserController extends Controller {
             'email' => 'required'
       ];
 
-	return Response::json(['heck' => 'naa']);
-
         $validator = Validator::make(Purifier::clean($request->all()), $rules);
 
         if ($validator->fails())

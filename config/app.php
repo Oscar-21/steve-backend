@@ -179,6 +179,7 @@ return [
 
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         Mews\Purifier\PurifierServiceProvider::class,
+        Barryvdh\Cors\ServiceProvider::class,
 
     ],
 

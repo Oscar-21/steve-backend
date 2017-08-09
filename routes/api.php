@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use App\User;
-//use Response;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +50,18 @@ Route::get('test', 'UserController@test');
 // Event Routes
 Route::post('savemeet', 'EventController@store');
 Route::post('eventsignup', 'EventController@signUp');
+
+// Test Routes
+Route::get('do', function() {
+  return Response::json(['hell' => 'naa']);
+});
+
+Route::post('showr', function(Request $request) {
+   return Response::json($request);
+});
+//Route::get('do', function() {
+ //   return 'naa'; 
+//});
 
 // Invalid request route
 Route::any('{path?}', 'MainController@index')->where("path", ".+");
