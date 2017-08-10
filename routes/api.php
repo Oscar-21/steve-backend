@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Http\Request;
 use App\User;
 
@@ -50,6 +49,7 @@ Route::get('test', 'UserController@test');
 // Event Routes
 Route::post('savemeet', 'EventController@store');
 Route::post('eventsignup', 'EventController@signUp');
+Route::get('eventdate', 'EventController@EventDate');
 
 // Test Routes
 Route::get('do', function() {

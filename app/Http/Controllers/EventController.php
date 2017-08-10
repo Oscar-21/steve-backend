@@ -12,16 +12,17 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Auth;
 use JWTAuth;
+use DateTime;
 
 class EventController extends Controller {
 
-/*  public function __construct() {
+  public function __construct() {
 
       $this->middleware('jwt.auth', ['only'=> [
           'store',
           'destroy',
       ]]);
-  } */
+  } 
 
 
   /**
@@ -90,7 +91,6 @@ class EventController extends Controller {
          */
         Log::error('Error: Event not created');  
         return Response::json(['error' => 'Event not created']);  
-
     }    
 
     public function signUp() {
@@ -99,6 +99,20 @@ class EventController extends Controller {
             return Response::json(['error' => 'Must be logged in']);
 
         return Response::json(['success' => 'Sign up successfull']);
+    }
+
+    public function EventDate() {
+      $event = Event::where('name', 'bike')->first();
+      $today = date('Y-m-d');
+      $date =  $event->date;
+
+
+    $now = new DateTime("$today");
+    $event_date  = new DateTime("$date");
+    $dateDiff = $now->diff($event_date);
+
+    return Response::json($dateDiff->days);
+
     }
 
    public function destroy() {
