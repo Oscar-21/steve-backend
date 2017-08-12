@@ -17,13 +17,11 @@ use DateTime;
 class EventController extends Controller {
 
   public function __construct() {
-
       $this->middleware('jwt.auth', ['only'=> [
           'store',
           'destroy',
       ]]);
   } 
-
 
   /**
    * CONVERT DATE FORMAT TO IS0-8601
@@ -31,7 +29,7 @@ class EventController extends Controller {
     public function store(Request $request) {
 
         // Constants
-        $VALID_DATE_LENGTH = 10;
+	$VALID_DATE_LENGTH = 10;
 
         // GET FORM INPUT
         $name = $request->input('name');

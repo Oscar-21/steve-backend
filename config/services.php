@@ -35,4 +35,8 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'admin' => [
+        'key' => env('ADMIN_KEY'),
+    ],
+
 ];

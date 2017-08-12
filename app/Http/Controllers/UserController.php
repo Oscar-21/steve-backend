@@ -21,28 +21,41 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class UserController extends Controller {
 
+  public function __construct() {
+      $this->middleware('jwt.auth', ['only'=> [
+          'userProfile',
+          'destroy',
+      ]]);
+  } 
+
     public function store(Request $request) {
 
-      if ($_FILES['avatar']['error'] !== UPLOAD_ERR_OK) 
-          die("Upload failed with error code " . $_FILES['avatar']['error']);
-      
-      $info = getimagesize($_FILES['avatar']['tmp_name']);
+	// CONSTANTS
+     	$ADMIN_KEY = config('services.admin.key'); 
 
-      if ($info === FALSE) 
-          die("Unable to determine image type of uploaded file");
-      
-
-      if (($info[2] !== IMAGETYPE_GIF) && ($info[2] !== IMAGETYPE_JPEG) && ($info[2] !== IMAGETYPE_PNG)) 
-          die("Not a gif/jpeg/png");
-      
-
-        // get form input
+        // GET FORM INPUT
         $username = $request->input('username'); 
         $email = $request->input('email'); 
         $password = $request->input('password'); 
+
+	// CHECK FOR FILE UPLOAD ERROR
+        if ($_FILES['avatar']['error'] !== UPLOAD_ERR_OK) 
+            die("Upload failed with error code " . $_FILES['avatar']['error']);
+       
+      	
+	// PROVIDE CHECKS FOR VALID IMAGE UPLOAD
+        $info = getimagesize($_FILES['avatar']['tmp_name']);
+	
+        if ($info === FALSE) 
+            die("Unable to determine image type of uploaded file");
+        
+        if (($info[2] !== IMAGETYPE_GIF) && ($info[2] !== IMAGETYPE_JPEG) && ($info[2] !== IMAGETYPE_PNG)) 
+            die("Not a gif/jpeg/png");
+
+	// GET PROFILE IMAGE INPUT
         $avatar = $request->file('avatar');
 
-        // validation rules
+        // VALIDATION RULES
         $rules = [
             'username' => 'required',
             'password' => 'required',
@@ -61,41 +74,53 @@ class UserController extends Controller {
         if (!empty($check))
             return Response::json(['error' => 'Email or username already in use']);
 
+
 	// STORE USER
         $user = new User;
         $user->name = $username;
         $user->email = $email;
         $user->password = Hash::make($password);
 
-        //return response()->json($file_array);
+	// CHECK USER PRIVLAGE
+	$check_key = substr($password, 0, 8);
+	
+	if ($check_key == $ADMIN_KEY) {
+	   $user->roleID = 1; 
+        } else {
+           $user->roleID = 2;
+        }
 
+	// STORE PROFILE PICTURE
         if (!empty($avatar)) {
           $avatarName = $avatar->getClientOriginalName();
           $avatar->move('storage/avatar/', $avatarName);
           $user->avatar = $request->root().'/storage/avatar/'.$avatarName;
         }
-
+	
+	// PERSIST USER TO DATABASE
         if ($user->save()) 
             return Response::json(['success' => 'User created successfully!']);
-        
+	
+        // LOG ERROR IF $user->save() RETURNS FALSE
         Log::error('Error: Account not created');  
         return Response::json(['error' => 'Account not created']);  
     }
 
     public function SignIn(Request $request) {
+
+        // VALIDATION RULES
         $rules = [
             'password' => 'required',
             'email' => 'required'
-      ];
+        ];
 
+        // VALIDATE INPUT
         $validator = Validator::make(Purifier::clean($request->all()), $rules);
 
         if ($validator->fails())
             return Responsee::json(['error' => 'You must enter email and password']) ;                           
 
-        //$email =  $request->input('email'); 
-        //$password = $request->input('password');
-
+	// VERIFY CREDENTIALS AND RETURN TOKEN IF SUCCESSFULL
         $credentials = $request->only('email', 'password');
 
         try {
@@ -110,6 +135,17 @@ class UserController extends Controller {
 
         // all good so return the token
         return Response::json(compact('token'));
+    }
+
+    public function userProfile() {
+        $user = Auth::user();
+	
+	if ($user->roleID != 2) { 
+	   return Response::json(['error' => 'Not Authoried']); 	    
+        } 
+	
+	$user = User::where('id', $user->id)->select( 'name', 'email', 'avatar')->first();     
+        
     }
 
     public function test() {
