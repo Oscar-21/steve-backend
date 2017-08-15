@@ -40,7 +40,7 @@ class UserController extends Controller {
      *
      * @param Illuminate\Support\Facades\Request::class
 
-     * @return  Illuminate\Support\Facades\Response::json()
+     * @return  Illuminate\Support\Facades\Response::class
      */
     public function store(Request $request) {
 
