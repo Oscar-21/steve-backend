@@ -178,7 +178,7 @@ class UserController extends Controller {
     /**
      * User event sign up
      *
-     * @param Auth::user()->id 
+     * @param Auth::user 
 
      * @return int
      */
