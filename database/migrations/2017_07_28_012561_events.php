@@ -19,7 +19,7 @@ class Events extends Migration
         $table->string('category');
 	$table->date('date');
         $table->integer('owner_id');
-        $table->integer('particants');
+        $table->integer('participants');
         $table->timestamps();
       });
     }

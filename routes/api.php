@@ -44,12 +44,13 @@ use App\User;
 // User Routes
 Route::post('SignUp', 'UserController@store');
 Route::post('login', 'UserController@SignIn');
-Route::get('test', 'UserController@test');
+Route::get('join/{id}', 'UserController@join');
 
 // Event Routes
 Route::post('savemeet', 'EventController@store');
 Route::post('eventsignup', 'EventController@signUp');
 Route::get('eventdate', 'EventController@EventDate');
+Route::get('events', 'EventController@show');
 
 // Test Routes
 Route::get('do', function() {

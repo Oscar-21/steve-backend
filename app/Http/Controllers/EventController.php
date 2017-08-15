@@ -27,14 +27,18 @@ class EventController extends Controller {
    * CONVERT DATE FORMAT TO IS0-8601
    **/
     public function store(Request $request) {
+	
+	$user = Auth::user();
 
         // Constants
 	$VALID_DATE_LENGTH = 10;
+	$FIRST_PARTICIPANT = 1;
 
         // GET FORM INPUT
         $name = $request->input('name');
         $category = $request->input('category');
         $date = $request->input('date');
+	$owner_id = $user->id;	
 
         // INPUT VALIDATION RULES
         $rules = [
@@ -80,6 +84,8 @@ class EventController extends Controller {
         $event->name = $name;
         $event->category = $category;
         $event->date = $mysqlDateFormat;
+	$event->owner_id = $owner_id;
+	$event->participants = $FIRST_PARTICIPANT;
   
         if ($event->save());
             return Response::json(['success' => 'Event created successfully!']);
@@ -90,27 +96,18 @@ class EventController extends Controller {
         Log::error('Error: Event not created');  
         return Response::json(['error' => 'Event not created']);  
     }    
+	
+    public function show() {
+        $events = Event::all();
+	return $events;
+    }
 
-    public function signUp() {
+   public function signUp() {
 
         if (!Auth::viaRemember())
             return Response::json(['error' => 'Must be logged in']);
 
         return Response::json(['success' => 'Sign up successfull']);
-    }
-
-    public function EventDate() {
-      $event = Event::where('name', 'bike')->first();
-      $today = date('Y-m-d');
-      $date =  $event->date;
-
-
-    $now = new DateTime("$today");
-    $event_date  = new DateTime("$date");
-    $dateDiff = $now->diff($event_date);
-
-    return Response::json($dateDiff->days);
-
     }
 
    public function destroy() {

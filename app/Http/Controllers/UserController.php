@@ -21,13 +21,27 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class UserController extends Controller {
 
-  public function __construct() {
-      $this->middleware('jwt.auth', ['only'=> [
-          'userProfile',
-          'destroy',
-      ]]);
-  } 
+    /**
+     * Apply jwt middleware to specific routes.
+     *
+     * @param  void
+     * @return void
+     */
+    public function __construct() {
+        $this->middleware('jwt.auth', ['only'=> [
+            'userProfile',
+            'join',		
+            'destroy',
+        ]]);
+    } 
 
+    /**
+     * Persist user to database after sign up.
+     *
+     * @param Illuminate\Support\Facades\Request::class
+
+     * @return  Illuminate\Support\Facades\Response::json()
+     */
     public function store(Request $request) {
 
 	// CONSTANTS
@@ -74,7 +88,6 @@ class UserController extends Controller {
         if (!empty($check))
             return Response::json(['error' => 'Email or username already in use']);
 
-
 	// STORE USER
         $user = new User;
         $user->name = $username;
@@ -106,6 +119,13 @@ class UserController extends Controller {
         return Response::json(['error' => 'Account not created']);  
     }
 
+    /**
+     * User Log In.
+     *
+     * @param Illuminate\Support\Facades\Request::class
+
+     * @return  Illuminate\Support\Facades\Response::json()
+     */
     public function SignIn(Request $request) {
 
         // VALIDATION RULES
@@ -137,6 +157,13 @@ class UserController extends Controller {
         return Response::json(compact('token'));
     }
 
+    /**
+     * Return data from app\User to populate user profile.
+     *
+     * @param void
+
+     * @return  Auth::user()->select('name','avatar','email')
+     */
     public function userProfile() {
         $user = Auth::user();
 	
@@ -148,9 +175,28 @@ class UserController extends Controller {
         
     }
 
-    public function test() {
-	$unix_date = mktime(5,20,1987);
-	$date = date('jS F Y', $unix_date);
-	return $date;
-    }
+    /**
+     * User event sign up
+     *
+     * @param Auth::user()->id 
+
+     * @return int
+     */
+    public function join($id) {
+        $user_id = Auth::id();      
+        $event_id = (int) $id;
+
+        $id_type = gettype($event_id);
+        return $id_type;
+
+        /*$event = new Usertoevent;
+        $event->user_id = $user_id;
+        $event->event_id = $event_id;*/
+
+        
+
+        return $user_id;
+    } 
+
+
 }
