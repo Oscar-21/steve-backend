@@ -162,7 +162,7 @@ class UserController extends Controller {
      *
      * @param void
 
-     * @return  Auth::user()->select('name','avatar','email')
+     * @return  Auth::user
      */
     public function userProfile() {
         $user = Auth::user();
