@@ -185,9 +185,7 @@ class UserController extends Controller {
     public function join($id, $participants) {
         $user_id = Auth::id();      
         $event_id = (int) $id;
-        $event_participants = $participants;
-
-        return $event_participants;
+        $event_participants = (int) $participants;
 
         $check = Usertoevent::where('user_id', $user_id)->where('event_id', $event_id)->first();
 
@@ -202,7 +200,10 @@ class UserController extends Controller {
             return Response::json(['error ' => 'could not join event']);  
        
        $event = Event::where('id', $event_id)->first();
-       $event->participants = 
+       $event->participants = $event_participants + 1;
+
+       if ($event->save())
+           return Response::json(['success' => 'joined event']);    
     } 
 
 
