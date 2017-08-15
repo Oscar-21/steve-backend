@@ -33,6 +33,7 @@ class EventController extends Controller {
         // Constants
 	$VALID_DATE_LENGTH = 10;
 	$FIRST_PARTICIPANT = 1;
+        $USER_ID = Auth::id();
 
         // GET FORM INPUT
         $name = $request->input('name');
@@ -57,7 +58,7 @@ class EventController extends Controller {
         $check = Event::where('name', $name)->where('category', $category)->first();
 
         if (!empty($check))
-            return Responsee::json(["error" => "Event name: $name aldready in exists in category: $category"]);
+            return Response::json(["error" => "Event name: $name aldready in exists in category: $category"]);
   
 
         // ENSURE VALID DATE INPUT
@@ -86,11 +87,24 @@ class EventController extends Controller {
         $event->date = $mysqlDateFormat;
 	$event->owner_id = $owner_id;
 	$event->participants = $FIRST_PARTICIPANT;
-  
-        if ($event->save());
-            return Response::json(['success' => 'Event created successfully!']);
+        $event->save();
 
-        /**
+        // UPDATE Usertoevents TABLE
+        $stored_event = Event::where('name', $name)->where('category', $category)->first();
+
+        if (empty($stored_event))
+            return Response::json(["error" => "Event name: $name not persisted in category: $category"]);
+
+        $event_id = $stored_event->id;
+        
+        $user_to_event = new Usertoevent;
+        $user_to_event->user_id = $USER_ID;
+        $user_to_event->event_id = $event_id;
+
+        if ($user_to_event->save())
+            return Response::json(['success' => 'event created successfully']);
+  
+               /**
          * ERROR LOGGING
          */
         Log::error('Error: Event not created');  

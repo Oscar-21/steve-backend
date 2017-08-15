@@ -182,20 +182,27 @@ class UserController extends Controller {
 
      * @return int
      */
-    public function join($id) {
+    public function join($id, $participants) {
         $user_id = Auth::id();      
         $event_id = (int) $id;
+        $event_participants = $participants;
 
-        $id_type = gettype($event_id);
-        return $id_type;
+        return $event_participants;
 
-        /*$event = new Usertoevent;
-        $event->user_id = $user_id;
-        $event->event_id = $event_id;*/
+        $check = Usertoevent::where('user_id', $user_id)->where('event_id', $event_id)->first();
 
-        
+        if (!empty($check))
+            return Response::json(['error' => 'You already signed up for this event']);
 
-        return $user_id;
+        $user_to_event = new Usertoevent;
+        $user_to_event->user_id = $user_id;
+        $user_to_event->event_id = $event_id;
+
+        if (!$user_to_event->save())
+            return Response::json(['error ' => 'could not join event']);  
+       
+       $event = Event::where('id', $event_id)->first();
+       $event->participants = 
     } 
 
 

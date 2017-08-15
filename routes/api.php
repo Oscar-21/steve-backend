@@ -44,7 +44,7 @@ use App\User;
 // User Routes
 Route::post('SignUp', 'UserController@store');
 Route::post('login', 'UserController@SignIn');
-Route::get('join/{id}', 'UserController@join');
+Route::get('join/{id}/{participants}', 'UserController@join');
 
 // Event Routes
 Route::post('savemeet', 'EventController@store');
