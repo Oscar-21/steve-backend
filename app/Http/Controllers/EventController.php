@@ -41,11 +41,30 @@ class EventController extends Controller {
         $date = $request->input('date');
 	$owner_id = $user->id;	
 
+	// CHECK FOR FILE UPLOAD ERROR
+        if ($_FILES['image']['error'] !== UPLOAD_ERR_OK) 
+            die("Upload failed with error code " . $_FILES['image']['error']);
+       
+      	
+	// PROVIDE CHECKS FOR VALID IMAGE UPLOAD
+        $info = getimagesize($_FILES['image']['tmp_name']);
+	
+        if ($info === FALSE) 
+            die("Unable to determine image type of uploaded file");
+        
+        if (($info[2] !== IMAGETYPE_GIF) && ($info[2] !== IMAGETYPE_JPEG) && ($info[2] !== IMAGETYPE_PNG)) 
+            die("Not a gif/jpeg/png");
+
+	// GET PROFILE IMAGE INPUT
+        $image = $request->file('image');
+
+
         // INPUT VALIDATION RULES
         $rules = [
             'name' => 'required',
             'category' => 'required',
-            'date' => 'required',	
+            'date' => 'required',
+            'image' => 'required'
         ];
 
         // VALIDATE AND ESCAPE INPUT
@@ -87,6 +106,14 @@ class EventController extends Controller {
         $event->date = $mysqlDateFormat;
 	$event->owner_id = $owner_id;
 	$event->participants = $FIRST_PARTICIPANT;
+
+	// STORE EVENT IMAGE
+        if (!empty($image)) {
+          $imageName = $image->getClientOriginalName();
+          $image->move('storage/event/', $imageName);
+          $event->image = $request->root().'/storage/event/'.$imageName;
+        }
+	
         $event->save();
 
         // UPDATE Usertoevents TABLE

@@ -10,6 +10,7 @@
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "mews/purifier": "^2.0",
+        "php-amqplib/php-amqplib": "2.6.*",
         "tymon/jwt-auth": "0.5.*"
     },
     "require-dev": {

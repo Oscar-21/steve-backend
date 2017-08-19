@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 use Illuminate\Http\Request;
 use DateTime;
 use App\User;
@@ -30,7 +32,8 @@ class UserController extends Controller {
     public function __construct() {
         $this->middleware('jwt.auth', ['only'=> [
             'userProfile',
-            'join',		
+            'join',
+            'logOut',
             'destroy',
         ]]);
     } 
@@ -206,5 +209,83 @@ class UserController extends Controller {
            return Response::json(['success' => 'joined event']);    
     } 
 
+    /**
+      * User event sign up
+      *
+      * @param Auth::user 
+      *
+      * @return int
+      */
+    public function logOut() {
+
+        if (!Auth::check())
+            return Response::json(['error' => 'not logged in']);
+
+        if (Auth::check())
+            Auth::logout();
+
+        if (!Auth::check())
+            return Response::json(['success' => 'logged out']);
+    }   
+
+    public function rabbit() {
+        $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+
+        $channel = $connection->channel();
+        $channel->queue_declare('hello', false, false, false, false);
+        $msg = new AMQPMessage('Hello World!');
+        $channel->basic_publish($msg, '', 'hello');
+        $process = new Process('echo "hello, world"');
+        $process->run();
+
+        // executes after the command finishes
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        echo $process->getOutput();
+        $channel->close();
+        $connection->close();
+    }
+    
+    public function rec() {
+        $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+        $channel = $connection->channel();
+        $channel->queue_declare('hello', false, false, false, false);
+
+
+        $callback = function($msg) {
+            $message = " [x] Received ".$msg->body."\n";
+            echo $message;
+        };
+        
+
+        $channel->basic_consume('hello', '', false, true, false, false, $callback);
+        $channel->callbacks;
+        $channel->wait();
+        
+
+        echo "two\n";
+        $channel->close();
+        $connection->close();
+        return Response::json(['success' => 'yay']);
+    }
+
+    public function testProcess() {
+        $process = new Process('echo "hello, world"');
+        $process->run();
+
+        // executes after the command finishes
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+            }
+
+            echo $process->getOutput();
+    }
+
+    public function what() {
+        $what = php_sapi_name();
+        return $what;
+    }
 
 }

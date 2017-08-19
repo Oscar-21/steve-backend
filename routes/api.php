@@ -1,4 +1,4 @@
-<?php
+<?PHP
 use Illuminate\Http\Request;
 use App\User;
 
@@ -44,13 +44,20 @@ use App\User;
 // User Routes
 Route::post('SignUp', 'UserController@store');
 Route::post('login', 'UserController@SignIn');
-Route::get('join/{id}/{participants}', 'UserController@join');
+Route::middleware('etag')->get('join/{id}/{participants}', 'UserController@join');
+Route::middleware('etag')->get('logout', 'UserController@logOut');
+Route::get('testP', 'UserController@testProcess');
+Route::get('testRa', 'UserController@rec');
+Route::get('testR', 'UserController@rabbit');
+Route::get('what', 'UserController@what');
 
 // Event Routes
 Route::post('savemeet', 'EventController@store');
 Route::post('eventsignup', 'EventController@signUp');
-Route::get('eventdate', 'EventController@EventDate');
-Route::get('events', 'EventController@show');
+Route::middleware('etag')->get('eventdate', 'EventController@EventDate');
+
+//Route::middleware('etag')->get('events', 'EventController@show');
+Route::middleware('etag')->get('events', 'EventController@show');
 
 // Test Routes
 Route::get('do', function() {
