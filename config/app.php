@@ -171,11 +171,11 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        Steve\Providers\AppServiceProvider::class,
+        Steve\Providers\AuthServiceProvider::class,
+        // Steve\Providers\BroadcastServiceProvider::class,
+        Steve\Providers\EventServiceProvider::class,
+        Steve\Providers\RouteServiceProvider::class,
 
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         Mews\Purifier\PurifierServiceProvider::class,

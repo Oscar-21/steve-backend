@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Steve\Http\Controllers;
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use Illuminate\Http\Request;
 use DateTime;
-use App\User;
-use App\Event;
-use App\Usertoevent;
+use Steve\User;
+use Steve\Event;
+use Steve\Usertoevent;
 use Response;
 use Purifier;
 use Hash;
@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Auth;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -249,6 +250,15 @@ class UserController extends Controller {
     }
     
     public function rec() {
+
+        $process = new Process('echo "hello, world"');
+        $process->run();
+
+        // executes after the command finishes
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        
         $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
         $channel = $connection->channel();
         $channel->queue_declare('hello', false, false, false, false);
@@ -272,15 +282,9 @@ class UserController extends Controller {
     }
 
     public function testProcess() {
-        $process = new Process('echo "hello, world"');
-        $process->run();
 
-        // executes after the command finishes
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-            }
-
-            echo $process->getOutput();
+        Artisan::call('test:command');
+    
     }
 
     public function what() {

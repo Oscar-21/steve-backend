@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Steve\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
-use App\Event;
-use App\Usertoevent;
+use Steve\User;
+use Steve\Event;
+use Steve\Usertoevent;
 use Response;
 use Purifier;
 use Illuminate\Support\Facades\Validator;

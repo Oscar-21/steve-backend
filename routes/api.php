@@ -1,5 +1,6 @@
 <?PHP
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use App\User;
 
 /*
@@ -46,7 +47,20 @@ Route::post('SignUp', 'UserController@store');
 Route::post('login', 'UserController@SignIn');
 Route::middleware('etag')->get('join/{id}/{participants}', 'UserController@join');
 Route::middleware('etag')->get('logout', 'UserController@logOut');
-Route::get('testP', 'UserController@testProcess');
+Route::get('song', 'UserController@testProcess');
+
+Route::get('echo', function() {
+    Artisan::call('echo:stuff');
+});
+
+
+Route::get('foobar', function() {
+    return Response::json(["foo" => "bar"]);
+});
+
+Route::get('songs', function() {
+   Artisan::call('test:command');
+});
 Route::get('testRa', 'UserController@rec');
 Route::get('testR', 'UserController@rabbit');
 Route::get('what', 'UserController@what');
