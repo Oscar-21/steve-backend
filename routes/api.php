@@ -53,6 +53,11 @@ Route::get('echo', function() {
     Artisan::call('echo:stuff');
 });
 
+Route::get('dis', function () {
+
+    return view('dis');
+
+    });
 
 Route::get('foobar', function() {
     return Response::json(["foo" => "bar"]);

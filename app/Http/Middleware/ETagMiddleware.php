@@ -1,6 +1,6 @@
 <?php
 
-namespace Steve\Http\Middleware;
+namespace App\Http\Middleware;
 
 use Closure;
 
@@ -13,8 +13,10 @@ class ETagMiddleware {
      * @return mixed
      */
     public function handle($request, Closure $next) {
+
         // Get response
         $response = $next($request);
+
         // If this was a GET request...
         if ($request->isMethod('get')) {
             // Generate Etag

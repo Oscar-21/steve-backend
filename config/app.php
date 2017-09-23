@@ -171,15 +171,16 @@ return [
         /*
          * Application Service Providers...
          */
-        Steve\Providers\AppServiceProvider::class,
-        Steve\Providers\AuthServiceProvider::class,
-        // Steve\Providers\BroadcastServiceProvider::class,
-        Steve\Providers\EventServiceProvider::class,
-        Steve\Providers\RouteServiceProvider::class,
+        App\Providers\AppServiceProvider::class,
+        App\Providers\AuthServiceProvider::class,
+        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\EventServiceProvider::class,
+        App\Providers\RouteServiceProvider::class,
 
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         Mews\Purifier\PurifierServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
+        //Jwilsson\SpotifyWebApiPhp\SpotifyWebAPI::class,
 
     ],
 
@@ -228,6 +229,7 @@ return [
         'Route' => Illuminate\Support\Facades\Route::class,
         'Schema' => Illuminate\Support\Facades\Schema::class,
         'Session' => Illuminate\Support\Facades\Session::class,
+       // 'Spotify' => Jwilsson\SpotifyWebApiPhp\SpotifyWebAPI::class,
         'Storage' => Illuminate\Support\Facades\Storage::class,
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,

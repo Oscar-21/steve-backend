@@ -1,6 +1,6 @@
 <?php
 
-namespace Steve\Http\Middleware;
+namespace App\Http\Middleware;
 
 use Closure;
 

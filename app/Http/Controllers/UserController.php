@@ -1,14 +1,12 @@
 <?php
-
-namespace Steve\Http\Controllers;
-
+namespace App\Http\Controllers;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use Illuminate\Http\Request;
 use DateTime;
-use Steve\User;
-use Steve\Event;
-use Steve\Usertoevent;
+use App\User;
+use App\Event;
+use App\Usertoevent;
 use Response;
 use Purifier;
 use Hash;
@@ -17,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Auth;
 use JWTAuth;
+use Spotify;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Process\Process;
@@ -38,6 +37,17 @@ class UserController extends Controller {
             'destroy',
         ]]);
     } 
+
+    public function spot() {
+        $session = new SpotifyWebAPI\Session(
+            'b6ab1b85736547fba91e2cb8aa16ad2e',
+            '9fb2e5df16fb4ce898e2df27ccc883df',
+            'http://react.app/spot'
+        );
+
+        header('Location: ' . $session->getAuthorizeUrl());
+        die();
+    }
 
     /**
      * Persist user to database after sign up.

@@ -1,8 +1,8 @@
 <?php
 
-namespace Steve\Http\Controllers;
+namespace App\Http\Controllers;
 
-use Steve\Stuff;
+use App\Stuff;
 use Illuminate\Http\Request;
 
 class StuffController extends Controller
@@ -41,7 +41,7 @@ class StuffController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \Steve\Stuff  $stuff
+     * @param  \App\Stuff  $stuff
      * @return \Illuminate\Http\Response
      */
     public function show(Stuff $stuff)
@@ -52,7 +52,7 @@ class StuffController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \Steve\Stuff  $stuff
+     * @param  \App\Stuff  $stuff
      * @return \Illuminate\Http\Response
      */
     public function edit(Stuff $stuff)
@@ -64,7 +64,7 @@ class StuffController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Steve\Stuff  $stuff
+     * @param  \App\Stuff  $stuff
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Stuff $stuff)
@@ -75,7 +75,7 @@ class StuffController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \Steve\Stuff  $stuff
+     * @param  \App\Stuff  $stuff
      * @return \Illuminate\Http\Response
      */
     public function destroy(Stuff $stuff)
